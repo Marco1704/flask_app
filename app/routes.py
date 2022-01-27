@@ -1,17 +1,8 @@
-from flask import Flask, render_template, url_for, flash, redirect
-import secrets
-from flask_app.forms import RegistrationForm, LoginForm
-from flask_sqlalchemy import SQLAlchemy
-from
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = secrets.token_hex(16)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-db = SQLAlchemy(app)
-
-with app.app_context():
-    db.drop_all()
-    db.create_all()
+from flask import render_template, url_for, flash, redirect
+from app import app
+from app.forms import RegistrationForm, LoginForm
+from app.models import User, Post
+import app.templates
 
 posts = [
     {
@@ -26,7 +17,6 @@ posts = [
         'content': 'Second post content',
         'date_posted': 'April 21, 2018'
     }
-
 ]
 
 
@@ -60,7 +50,3 @@ def login():
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
